@@ -1,2 +1,4 @@
-# 62
-CS 3110
+# Team name: 62
+
+Team: 
+- Henrik Gombos, hg526
