@@ -5,3 +5,4 @@ Team:
 - Max Lin, myl43
 - Gabe Meredith, gbm66 
 - Mihir Joshi, mjj65
+- Sabrina Gerson, sjg326
