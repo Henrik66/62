@@ -1,3 +1,5 @@
+
+(**Generates and prints a sudoku puzzle in the terminal*)
 let () = 
   let sudoku = Sudoku.Puzzles.generate () in
   let puzzle = Sudoku.Puzzles.get_puzzle sudoku in
