@@ -11,3 +11,4 @@ val get_puzzle : t -> int option list list
 (** Checks if a user input sudoku puzzle is valid *)
 val check : int option list list -> t -> bool
 
+val get_solution : t -> int list list
