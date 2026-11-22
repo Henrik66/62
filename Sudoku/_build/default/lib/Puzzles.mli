@@ -12,3 +12,4 @@ val get_puzzle : t -> int option list list
 val check : int option list list -> t -> bool
 
 val get_solution : t -> int list list
+val rep_ok : t -> bool
