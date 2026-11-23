@@ -142,13 +142,10 @@ let get_puzzle (sudoku : t) : int option list list =
 (** [check num row col gen_solution] checks whether [num] is the solution
     value at ([row], [col]) in [gen_solution]. If correct, it records [num]
     in the puzzle and returns [true]; otherwise it returns [false]. *)
-  let check num row col (gen_solution : t) =
-    let user_array = gen_solution.puzzle in
-    let solution_array = gen_solution.solution in
-    if solution_array.(row).(col) = num then
-      (user_array.(row).(col) <- Some num; true)
-    else
-      false
+  let validate num row col (gen_solution : t) =
+    (gen_solution.solution).(row).(col) = num
     
-
+let set num row col (gen_solution : t) =
+  gen_solution.puzzle.(row).(col) <- Some num;
+  gen_solution
 

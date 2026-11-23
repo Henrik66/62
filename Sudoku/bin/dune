@@ -1,4 +1,6 @@
 (executable
  (public_name Sudoku)
  (name main)
- (libraries Sudoku))
+ (modes exe)
+ (libraries Sudoku lwt lwt.unix)
+ (preprocess (pps lwt_ppx)))

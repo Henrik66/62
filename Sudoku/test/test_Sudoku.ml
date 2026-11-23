@@ -75,7 +75,7 @@ let test_check_accepts_correct _ =
   | None -> ()
   | Some (i, j) ->
       let v = List.nth (List.nth (get_solution s) i) j in
-      assert_bool "correct digit rejected" (check v i j s);
+      assert_bool "correct digit rejected" (validate v i j s);
       assert_equal (Some v) (List.nth (List.nth (get_puzzle s) i) j)
 
 (* ---------- Test 4: check rejects a wrong digit and leaves the cell empty ---------- *)
@@ -89,8 +89,8 @@ let test_check_rejects_wrong _ =
       (* (v mod 9) + 1 is always a different digit from v, so this
          digit is guaranteed to be wrong *)
       let wrong = (v mod 9) + 1 in
-      (* check must return false *)
-      assert_bool "wrong digit accepted" (not (check wrong i j s));
+      (* validate must return false *)
+      assert_bool "wrong digit accepted" (not (validate wrong i j s));
       (* A rejected move must not change the puzzle, so the cell stays None *)
       assert_equal None (List.nth (List.nth (get_puzzle s) i) j)
 

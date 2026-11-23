@@ -7,10 +7,12 @@ val generate : unit -> t
 (** Returns the current unsolved puzzle as a list of lists of integers *)
 val get_puzzle : t -> int option list list
 
-(** Checks if a user input sudoku puzzle is valid
-    alters the puzzle in place and returns true if valid
-    input is number, row, column *)
-val check : int -> int -> int -> t -> bool
+(** Checks if a user input sudoku puzzle is valid 
+    input is number, row, column*)
+val validate : int -> int -> int -> t -> bool
+(**alters the puzzle in place and returns the puzzle 
+    input is number, row, column*)
+val set : int -> int -> int -> t -> t
 
 (** Returns the solution of the sudoku puzzle as a list of lists of integers *)
 val get_solution : t -> int list list
