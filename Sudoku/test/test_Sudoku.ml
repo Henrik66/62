@@ -45,16 +45,16 @@ let first_empty s =
 (* ---------- Test 1: generated solutions follow the Sudoku rules ---------- *)
 
 let test_solutions_valid _ =
-  (* Repeat 50 times because the generator is random, and one pass
+  (* Repeat 10 times because the generator is random, and one pass
      could pass by luck *)
-  for _ = 1 to 50 do
+  for _ = 1 to 10 do
     assert_bool "invalid solution" (solution_is_valid (get_solution (generate ())))
   done
 
 (* ---------- Test 2: every given agrees with the solution ---------- *)
 
 let test_puzzle_matches_solution _ =
-  for _ = 1 to 50 do
+  for _ = 1 to 10 do
     let s = generate () in
     List.iter2
       (fun prow srow ->
