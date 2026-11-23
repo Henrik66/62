@@ -96,47 +96,6 @@ let rec fill_grid grid row col =
     in
     try_candidates candidates
 
-(** [count_solutions puzzle] returns the number of ways [puzzle] can be
-    completed as a valid Sudoku grid. The result is capped at [2], since the
-    generator only needs to distinguish zero, one, and multiple solutions.
-    The input grid is not modified. *)
-let count_solutions puzzle =
-  let grid =
-    Array.init 9 (fun r ->
-      Array.init 9 (fun c ->
-        match puzzle.(r).(c) with
-        | Some n -> n
-        | None -> 0))
-  in
-  let count = ref 0 in
-
-  let rec solve () =
-    if !count >= 2 then ()
-    else
-      (* Pick the first empty cell in row-major order. *)
-      let empty = ref None in
-      for r = 0 to 8 do
-        for c = 0 to 8 do
-          if grid.(r).(c) = 0 && !empty = None then
-            empty := Some (r, c)
-        done
-      done;
-
-      match !empty with
-      | None -> incr count (* No empty cells means we found a solution. *)
-      | Some (r, c) ->
-          for n = 1 to 9 do
-            if is_valid grid r c n then begin
-              grid.(r).(c) <- n;
-              solve ();
-              grid.(r).(c) <- 0
-            end
-          done
-  in
-
-  solve ();
-  !count
-
 (** [generate ()] creates a complete valid Sudoku solution, then removes clues
     in a randomized order. A clue is kept removed only when the resulting
     puzzle still has exactly one solution. *)
@@ -164,7 +123,7 @@ Array.iter (fun cell ->
   let col = cell mod 9 in
   let saved = puzzle.(row).(col) in
   puzzle.(row).(col) <- None;
-  if count_solutions puzzle <> 1 then
+  if Solver.count_solutions puzzle <> 1 then
     puzzle.(row).(col) <- saved
 ) cells;
 
