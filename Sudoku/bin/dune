@@ -2,5 +2,5 @@
  (public_name Sudoku)
  (name main)
  (modes exe)
- (libraries Sudoku lwt lwt.unix)
+ (libraries Sudoku lwt lwt.unix unix lambda-term)
  (preprocess (pps lwt_ppx)))
