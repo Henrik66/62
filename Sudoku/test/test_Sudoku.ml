@@ -30,10 +30,17 @@ let solution_is_valid sol =
   && List.for_all (fun c -> valid_group (col c)) idx
   && List.for_all (fun b -> valid_group (box b)) idx
 
-(* Turns the stored solution into the shape check expects: every digit
-   wrapped in Some. This is what a user who filled in the whole board
-   correctly would submit. *)
-let full_of s = List.map (List.map (fun n -> Some n)) (get_solution s)
+(* Finds the first empty cell (row, col) of a puzzle, or None if the
+   puzzle has no empty cells. *)
+let first_empty s =
+  let found = ref None in
+  List.iteri
+    (fun i row ->
+      List.iteri
+        (fun j c -> if c = None && !found = None then found := Some (i, j))
+        row)
+    (get_puzzle s);
+  !found
 
 (* ---------- Test 1: generated solutions follow the Sudoku rules ---------- *)
 
@@ -60,43 +67,42 @@ let test_puzzle_matches_solution _ =
       (get_puzzle s) (get_solution s)
   done
 
-(* ---------- Test 3: check accepts the correct full solution ---------- *)
+(* ---------- Test 3: check accepts the correct digit for an empty cell ---------- *)
 
-let test_check_accepts_solution _ =
+let test_check_accepts_correct _ =
   let s = generate () in
-  (* Submitting the true solution must be judged correct *)
-  assert_bool "true solution rejected" (check (full_of s) s)
+  match first_empty s with
+  | None -> ()
+  | Some (i, j) ->
+      let v = List.nth (List.nth (get_solution s) i) j in
+      assert_bool "correct digit rejected" (check v i j s);
+      assert_equal (Some v) (List.nth (List.nth (get_puzzle s) i) j)
 
-(* ---------- Test 4: check rejects a board with one wrong digit ---------- *)
+(* ---------- Test 4: check rejects a wrong digit and leaves the cell empty ---------- *)
 
 let test_check_rejects_wrong _ =
   let s = generate () in
-  let wrong =
-    (* Start from the correct full board and change only cell row 0, column 0 *)
-    List.mapi
-      (fun i row ->
-        List.mapi
-          (fun j c ->
-            match c with
-            | Some n when i = 0 && j = 0 -> Some ((n mod 9) + 1)
-            | _ -> c)
-          row)
-      (full_of s)
-  in
-  (* check must return false *)
-  assert_bool "wrong entry accepted" (not (check wrong s))
+  match first_empty s with
+  | None -> ()
+  | Some (i, j) ->
+      let v = List.nth (List.nth (get_solution s) i) j in
+      (* (v mod 9) + 1 is always a different digit from v, so this
+         digit is guaranteed to be wrong *)
+      let wrong = (v mod 9) + 1 in
+      (* check must return false *)
+      assert_bool "wrong digit accepted" (not (check wrong i j s));
+      (* A rejected move must not change the puzzle, so the cell stays None *)
+      assert_equal None (List.nth (List.nth (get_puzzle s) i) j)
 
 (* ---------- Suite: lists the tests and runs them ---------- *)
 
 let suite =
-  (* The string is the suite name. Each entry is a test name >:: a function. *)
   "puzzle tests"
   >::: [
          "solutions valid" >:: test_solutions_valid;
          "puzzle matches solution" >:: test_puzzle_matches_solution;
-         "check accepts true solution" >:: test_check_accepts_solution;
-         "check rejects wrong entry" >:: test_check_rejects_wrong;
+         "check accepts correct digit" >:: test_check_accepts_correct;
+         "check rejects wrong digit" >:: test_check_rejects_wrong;
        ]
 
-(* Runs the suite and prints results. This is what dune test executes. *)
 let () = run_test_tt_main suite
