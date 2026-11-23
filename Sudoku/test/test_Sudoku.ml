@@ -76,6 +76,7 @@ let test_check_accepts_correct _ =
   | Some (i, j) ->
       let v = List.nth (List.nth (get_solution s) i) j in
       assert_bool "correct digit rejected" (validate v i j s);
+      ignore (set v i j s);
       assert_equal (Some v) (List.nth (List.nth (get_puzzle s) i) j)
 
 (* ---------- Test 4: check rejects a wrong digit and leaves the cell empty ---------- *)
